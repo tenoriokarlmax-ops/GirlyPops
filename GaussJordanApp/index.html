@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="An interactive Gauss–Jordan elimination workbench with clear row-by-row steps."
+    />
+    <title>Pivot — Gauss–Jordan Workbench</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="Pivot home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" role="img">
+            <path d="M7 7h7v7H7zM18 7h7v7h-7zM7 18h7v7H7z" />
+            <path class="brand-mark__accent" d="M18 18h7v7h-7z" />
+          </svg>
+        </span>
+        <span>Pivot</span>
+      </a>
+      <p>Linear systems, made legible.</p>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Gauss–Jordan workbench</p>
+          <h1>Turn a matrix into an <em>answer.</em></h1>
+          <p class="hero-intro">
+            Enter an augmented matrix and watch every row operation unfold. Built for
+            checking homework, exploring systems, and understanding the method.
+          </p>
+        </div>
+        <div class="hero-note" aria-label="Method overview">
+          <span>01</span>
+          <p>Choose dimensions</p>
+          <span>02</span>
+          <p>Enter coefficients</p>
+          <span>03</span>
+          <p>Follow the pivots</p>
+        </div>
+      </section>
+
+      <section class="workspace" aria-labelledby="workspace-title">
+        <div class="workspace-panel workspace-panel--input">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Your system</p>
+              <h2 id="workspace-title">Augmented matrix</h2>
+            </div>
+            <label class="example-picker">
+              <span>Example</span>
+              <select id="example-select">
+                <option value="">Custom</option>
+                <option value="classic" selected>Classic 3 × 3</option>
+                <option value="infinite">Dependent system</option>
+                <option value="inconsistent">No solution</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="dimension-controls" aria-label="Matrix dimensions">
+            <div>
+              <span>Row</span>
+              <div class="stepper">
+                <button type="button" data-dimension="rows" data-delta="-1" aria-label="Remove equation">−</button>
+                <strong id="equation-count">3</strong>
+                <button type="button" data-dimension="rows" data-delta="1" aria-label="Add equation">+</button>
+              </div>
+            </div>
+            <div>
+              <span>Column</span>
+              <div class="stepper">
+                <button type="button" data-dimension="variables" data-delta="-1" aria-label="Remove variable">−</button>
+                <strong id="variable-count">3</strong>
+                <button type="button" data-dimension="variables" data-delta="1" aria-label="Add variable">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="matrix-shell">
+            <div class="matrix-labels"><span>Coefficients</span><span>Constants</span></div>
+            <div id="matrix-input" class="matrix-input" aria-label="Augmented matrix inputs"></div>
+          </div>
+
+          <div class="actions">
+            <button class="button button--primary" id="solve-button" type="button">
+              Reduce matrix
+              <svg viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M4 10h12M11 5l5 5-5 5" />
+              </svg>
+            </button>
+            <button class="button button--secondary" id="clear-button" type="button">Clear all</button>
+          </div>
+        </div>
+
+        <aside class="workspace-panel workspace-panel--guide">
+          <p class="eyebrow">Quick reference</p>
+          <h2>What are we solving?</h2>
+          <p>
+            Each row represents one equation. The final column holds the constants
+            on the right side of the equals sign.
+          </p>
+          <div class="equation-card" aria-label="Example equation">
+            <div><b>2</b>x<sub>1</sub> + <b>1</b>x<sub>2</sub> − <b>1</b>x<sub>3</sub></div>
+            <span>=</span>
+            <strong>8</strong>
+          </div>
+          <div class="rule"></div>
+          <p class="guide-caption">The goal</p>
+          <p>
+            Transform the coefficient side into reduced row echelon form while
+            preserving the system’s solution.
+          </p>
+        </aside>
+      </section>
+
+      <section id="result" class="result-card" aria-live="polite" hidden></section>
+      <section id="steps" class="steps-section" hidden></section>
+
+      <section class="learn-section" aria-labelledby="learn-title">
+        <div class="learn-intro">
+          <div>
+            <p class="eyebrow">Behind the method</p>
+            <h2 id="learn-title">What is Gauss–Jordan elimination?</h2>
+          </div>
+          <div class="learn-copy">
+            <p>
+              Gauss–Jordan elimination is a systematic way to solve a group of
+              linear equations. It uses three legal row operations—swapping rows,
+              multiplying a row by a nonzero number, and adding a multiple of one
+              row to another—to simplify an augmented matrix.
+            </p>
+            <p>
+              The process continues until the matrix reaches reduced row echelon
+              form. At that point, a unique answer can be read directly, or the
+              matrix reveals that the system has infinitely many solutions or no
+              solution at all.
+            </p>
+          </div>
+        </div>
+
+        <div class="method-strip" aria-label="Gauss–Jordan method overview">
+          <div><span>01</span><strong>Find a pivot</strong><p>Choose the next nonzero leading entry.</p></div>
+          <div><span>02</span><strong>Make it one</strong><p>Scale the pivot row to normalize it.</p></div>
+          <div><span>03</span><strong>Clear the column</strong><p>Eliminate every other entry above and below.</p></div>
+        </div>
+
+        <div class="applications-heading">
+          <p class="eyebrow">Beyond the classroom</p>
+          <h2>Where is it used in the real world?</h2>
+        </div>
+        <div class="applications-grid">
+          <article>
+            <span class="application-number">01</span>
+            <h3>Engineering systems</h3>
+            <p>
+              Engineers solve simultaneous equations to analyze electrical
+              circuits, balance forces in structures, and model fluid networks.
+            </p>
+          </article>
+          <article>
+            <span class="application-number">02</span>
+            <h3>Computer graphics</h3>
+            <p>
+              Matrix equations support 3D transformations, camera positioning,
+              lighting calculations, and geometric simulations.
+            </p>
+          </article>
+          <article>
+            <span class="application-number">03</span>
+            <h3>Economics and planning</h3>
+            <p>
+              Linear systems help compare production requirements, allocate
+              limited resources, and study relationships between industries.
+            </p>
+          </article>
+          <article>
+            <span class="application-number">04</span>
+            <h3>Data and science</h3>
+            <p>
+              Researchers use linear algebra in regression, chemical balancing,
+              network models, and numerical analysis of measured data.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Pivot</p>
+      <span>Exact method. Clear reasoning.</span>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
