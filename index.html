@@ -201,6 +201,23 @@
       <span>Exact method. Clear reasoning.</span>
     </footer>
 
+    <!-- SCROLL OBSERVER SCRIPT FOR FADE IN/OUT -->
+    <script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          // If the element is in view, add 'is-visible'. If not, remove it to fade out!
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          } else {
+            entry.target.classList.remove('is-visible');
+          }
+        });
+      }, { threshold: 0.15 }); // Triggers when 15% of the section is visible
+
+      const hiddenElements = document.querySelectorAll('.fade-in-section');
+      hiddenElements.forEach((el) => observer.observe(el));
+    </script>
+
     <script type="module" src="app.js"></script>
   </body>
 </html>

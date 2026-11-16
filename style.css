@@ -146,20 +146,15 @@ footer p { margin: 0; font-size: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-/* --- SCROLL FADE-IN ANIMATION --- */
+/* --- SCROLL FADE-IN / FADE-OUT ANIMATION --- */
 .fade-in-section {
   opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 1s ease-out forwards;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, transform;
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
